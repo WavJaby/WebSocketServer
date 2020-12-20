@@ -3,8 +3,6 @@ package com.server;
 
 import java.io.*;
 import java.net.Socket;
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Base64;
@@ -62,36 +60,15 @@ public class RequestHandler implements Runnable {
 
             while (running) {
                 while (in.available() > 0) {
-                    //decode Data
-                    byte[] inData = new byte[in.available()];
-                    in.read(inData);
+                    String message = readData(in);
 
-                    int opcode = ((char) inData[0]) & 0x0f;
-                    //如果連接關閉
-                    if (opcode == Opcode.connectionClose) {
-                        running = false;
-                        continue;
+                    System.out.println(TAG + "receive: " + message);
+
+                    if (message.equals("")){
+
                     }
 
-                    //資料大小
-                    int packetLength = ((char) inData[1]) & 0x7f;
-
-                    //read mask byte
-                    byte[] readMask = new byte[4];
-                    readMask[0] = inData[2];
-                    readMask[1] = inData[3];
-                    readMask[2] = inData[4];
-                    readMask[3] = inData[5];
-
-                    //payload data
-                    byte[] payload = new byte[packetLength];
-                    //unmasking
-                    for (int i = 0; i < packetLength; i++) {
-                        payload[i] = (byte) ((int) inData[6 + i] ^ (int) readMask[i % 4]);
-                    }
-
-                    System.out.println(TAG + "receive: " + new String(payload));
-                    sendData(("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa").getBytes(), writer);
+                    sendData("".getBytes(), writer);
 
                 }
 
@@ -114,26 +91,83 @@ public class RequestHandler implements Runnable {
         System.out.println("Client close");
     }
 
-    public static void sendData(byte[] payload, OutputStream writer) {
-        System.out.println(payload.length);
+    private String readData(InputStream in) throws IOException {
+        //decode Data
+        byte[] inData = new byte[in.available()];
+        in.read(inData);
 
-        //write response
-        byte[] frameHead = new byte[2];
-        int fin = 1, opcode = 1, mask = 0;
-
-        frameHead[0] = (byte) ((fin << 7) + opcode);
-        frameHead[1] = (byte) ((mask << 7) + payload.length);
-        System.out.println(printByte(frameHead));
-
-        byte[] response = new byte[frameHead.length + payload.length];
-        System.arraycopy(frameHead, 0, response, 0, frameHead.length);
-        System.arraycopy(payload, 0, response, frameHead.length, payload.length);
-
-        try {
-            writer.write(response);
-        } catch (IOException e) {
-            e.printStackTrace();
+        int opcode = ((char) inData[0]) & 0x0f;
+        //如果連接關閉
+        if (opcode == Opcode.connectionClose) {
+            running = false;
+            return null;
         }
+
+        //資料大小
+        int packetLength = ((char) inData[1]) & 0x7f;
+
+        //read mask byte
+        byte[] readMask = new byte[4];
+        readMask[0] = inData[2];
+        readMask[1] = inData[3];
+        readMask[2] = inData[4];
+        readMask[3] = inData[5];
+
+        //payload data
+        byte[] payload = new byte[packetLength];
+        //unmasking
+        for (int i = 0; i < packetLength; i++) {
+            payload[i] = (byte) ((int) inData[6 + i] ^ (int) readMask[i % 4]);
+        }
+        return new String(payload);
+    }
+
+    public void sendData(byte[] payloadInput, OutputStream writer) {
+        int count = 0;
+        int fin, opcode = Opcode.textFrame, mask = 0;
+        int payloadLength;
+
+        long time = System.currentTimeMillis();
+
+        do {
+            //計算每包長度不可以超過125
+            payloadLength = payloadInput.length - count * 125;
+            if (payloadLength > 125) {
+                fin = 0;
+                payloadLength = 125;
+            } else {
+                fin = 1;
+            }
+
+            //如果發送第二包
+            if (count > 0)
+                opcode = Opcode.continuationFrame;
+
+            //製作包
+            byte[] payload = new byte[payloadLength];
+            System.arraycopy(payloadInput, count * 125, payload, 0, payload.length);
+
+            //開頭資料
+            byte[] frameHead = new byte[2];
+            frameHead[0] = (byte) ((fin << 7) + opcode);
+            frameHead[1] = (byte) ((mask << 7) + payload.length);
+
+            //合併開頭跟資料
+            byte[] response = new byte[frameHead.length + payload.length];
+            System.arraycopy(frameHead, 0, response, 0, frameHead.length);
+            System.arraycopy(payload, 0, response, frameHead.length, payload.length);
+
+            //sendData
+            try {
+                writer.write(response);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            count++;
+        } while (payloadInput.length - count * 125 > 0);
+
+        System.out.println(System.currentTimeMillis() - time);
     }
 
     private static byte[] encryptSHA1(String inputString) {

@@ -64,11 +64,10 @@ public class RequestHandler implements Runnable {
 
                     System.out.println(TAG + "receive: " + message);
 
-                    if (message.equals("")){
-
+                    if (message.equals("getData")){
+                        sendData("{\"C\":{\"detailed\":\"21日14時的中心位置在北緯 9.0 度，東經 112.5 度，以每小時18公里速度，向西南西進行。|中心氣壓|1004|百帕|，|近中心最大風速每秒|15|公尺|，瞬間最大陣風每秒 23 公尺。|\",\"prediction\":\"現況|2020年12月21日14時|中心位置在北緯 9.0 度，東經 112.5 度|過去移動方向 西南西|過去移動時速 9公里|中心氣壓 1004百帕|近中心最大風速每秒 15 公尺|瞬間最大陣風每秒 23 公尺|,|預測|預測 12 小時平均移向移速為|西南西 時速 18 公里|預測 12月22日02時|中心位置在北緯 8.4 度，東經 110.6 度|中心氣壓1004百帕|近中心最大風速每秒 15 公尺|瞬間最大陣風每秒 23 公尺|70%機率半徑 120 公里|預測 12-24 小時平均移向移速為|西 時速 11 公里|預測 12月22日14時|中心位置在北緯 8.5 度，東經 109.4 度|中心氣壓1004百帕|近中心最大風速每秒 15 公尺|瞬間最大陣風每秒 23 公尺|70%機率半徑 170 公里|\",\"info\":\"熱帶性低氣壓|TD26|(原科羅旺颱風)\"},\"E\":{\"detailed\":\"Position 210600Z at 9.0N 112.5E, Movement: WSW 18km/hr. |Minimum pressure 1004 hpa, Max sustained winds near center 15 meter per second|, Gusts 23 meter per second.|\",\"prediction\":\"Analysis|0600UTC 21 December 2020|Center Location 9.0N 112.5E|Movement WSW 9km/hr|Minimum Pressure 1004 hPa|Maximum Wind Speed 15 m/s|Gust 23 m/s|,|Forecast|12 hours valid at:|1800UTC 21 December 2020|Center Position 8.4N 110.6E|Vector to 12 HR Position|WSW 18 km/hr|Minimum Pressure 1004 hPa|Maximum Wind Speed 15 m/s|Gust 23 m/s|Radius of 70% probability circle 120km|24 hours valid at:|0600UTC 22 December 2020|Center Position 8.5N 109.4E|Vector to 24 HR Position|W 11 km/hr|Minimum Pressure 1004 hPa|Maximum Wind Speed 15 m/s|Gust 23 m/s|Radius of 70% probability circle 170km|\",\"info\":\"TROPICAL DEPRESSION|TD26| (KROVANH)\"}}".getBytes(), writer);
                     }
 
-                    sendData("".getBytes(), writer);
 
                 }
 

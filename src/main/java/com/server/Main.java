@@ -19,16 +19,22 @@ public class Main implements RequestHandler.ClientEvent {
     public static void main(String[] args) {
 //        new Thread(() -> new Window(clients)).start();
         new Window(clients);
+//        new Thread(() -> new AutoReload()).start();
 
         initServer();
     }
 
     public static void stopServer() {
+        if (serverSocket.isClosed())
+            return;
+
         mainStart = false;
-        if (clients.size() > 0)
+        if (clients.size() > 0) {
             for (RequestHandler i : clients) {
-                i.closeSocket();
+                if (i != null)
+                    i.closeSocket();
             }
+        }
         try {
             serverSocket.close();
         } catch (IOException e) {
@@ -37,6 +43,8 @@ public class Main implements RequestHandler.ClientEvent {
     }
 
     public static void initServer() {
+        clients.clear();
+        canUseID.clear();
         new Thread(() -> {
             mainStart = true;
             //server
@@ -73,6 +81,18 @@ public class Main implements RequestHandler.ClientEvent {
             }
             System.out.println("[" + TAG + "]伺服器關閉!");
         }).start();
+    }
+
+    public static void reloadClient() {
+        for (RequestHandler i : clients) {
+            i.sendData("reload");
+        }
+    }
+
+    public static void sendMessage(String message) {
+        for (RequestHandler i : clients) {
+            i.sendData(message);
+        }
     }
 
     @Override

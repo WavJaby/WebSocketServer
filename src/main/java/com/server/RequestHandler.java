@@ -79,7 +79,7 @@ public class RequestHandler implements Runnable {
                         System.out.println("[" + TAG + "]receive: " + message);
 
                         if (message.equals("getData")) {
-                            byte[] b = new FileReader("/test.txt").data;
+                            byte[] b = new FileReader("/data.json").data;
                             sendData(b, writer);
                         }
                     }
@@ -100,6 +100,11 @@ public class RequestHandler implements Runnable {
 
         System.out.println("[" + TAG + "]Client close");
         closeSocket();
+    }
+
+    public void sendData(String message) {
+        System.out.println(message);
+        sendData(message.getBytes(), writer);
     }
 
     private String readData(InputStream in) throws IOException {
@@ -133,7 +138,7 @@ public class RequestHandler implements Runnable {
         return new String(payload);
     }
 
-    public void sendData(byte[] payloadInput, OutputStream writer) {
+    private void sendData(byte[] payloadInput, OutputStream writer) {
         int fin = 1, opcode = Opcode.textFrame, mask = 0;
         int dataLength = payloadInput.length;
         int payloadLength;

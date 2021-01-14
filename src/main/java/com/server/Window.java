@@ -23,21 +23,29 @@ public class Window extends JFrame implements ActionListener {
         setLayout(new FlowLayout());
         JButton button = new JButton("restart server");
         JButton button1 = new JButton("stop server");
+        JButton notificationButton = new JButton("send notification");
         button.addActionListener(this);
         button1.addActionListener(this);
+        notificationButton.addActionListener(this);
         add(button);
         add(button1);
+        add(notificationButton);
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
         String name = e.getActionCommand();
-        if(name.equals("stop server")){
+        if (name.equals("stop server")) {
             Main.stopServer();
         }
-        if(name.equals("restart server")){
+        if (name.equals("restart server")) {
             Main.stopServer();
             Main.initServer();
+        }
+        if (name.equals("send notification")) {
+            byte[] b = new FileReader("/notification.json").data;
+            Main.sendMessage("message");
+            Main.sendMessage(new String(b));
         }
     }
 }

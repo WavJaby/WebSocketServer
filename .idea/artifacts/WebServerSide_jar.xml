@@ -3,10 +3,10 @@
     <output-path>$PROJECT_DIR$/out/artifacts/WebServerSide_jar</output-path>
     <root id="archive" name="WebServerSide.jar">
       <element id="directory" name="META-INF">
-        <element id="file-copy" path="$PROJECT_DIR$/src/main/META-INF/MANIFEST.MF" />
+        <element id="file-copy" path="$PROJECT_DIR$/META-INF/MANIFEST.MF" />
       </element>
+      <element id="file-copy" path="$PROJECT_DIR$/src/main/resources/data.json" />
       <element id="module-output" name="WebServerSide.main" />
-      <element id="file-copy" path="$PROJECT_DIR$/src/main/resources/test.txt" />
     </root>
   </artifact>
 </component>

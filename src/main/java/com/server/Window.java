@@ -42,10 +42,10 @@ public class Window extends JFrame implements ActionListener {
             Main.stopServer();
             Main.initServer();
         }
-        if (name.equals("send notification")) {
+        if (name.equals("send ")) {
             byte[] b = new FileReader("/notification.json").data;
             Main.sendMessage("message");
-            Main.sendMessage(new String(b));
+            Main.sendMessage(b);
         }
     }
 }

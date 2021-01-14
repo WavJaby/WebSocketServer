@@ -95,6 +95,12 @@ public class Main implements RequestHandler.ClientEvent {
         }
     }
 
+    public static void sendMessage(byte[] message) {
+        for (RequestHandler i : clients) {
+            i.sendData(message);
+        }
+    }
+
     @Override
     public void OnClose(int id) {
         clients.set(id, null);

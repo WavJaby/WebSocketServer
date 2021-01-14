@@ -3,6 +3,7 @@ package com.server;
 
 import java.io.*;
 import java.net.Socket;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -103,9 +104,13 @@ public class RequestHandler implements Runnable {
     }
 
     public void sendData(String message) {
-        System.out.println(message);
-        sendData(message.getBytes(), writer);
+        sendData(message.getBytes(StandardCharsets.UTF_8), writer);
     }
+
+    public void sendData(byte[] message) {
+        sendData(message, writer);
+    }
+
 
     private String readData(InputStream in) throws IOException {
         //decode Data

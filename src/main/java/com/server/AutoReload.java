@@ -49,32 +49,31 @@ public class AutoReload extends JFrame implements ActionListener {
             try {
                 robot = new Robot();
 
-                Thread.sleep(300);
-
+//                Thread.sleep(300);
+//
                 nowX = screenWidth - 155;
-                nowY = 45;
-                clickButton(nowX, nowY, KeyEvent.BUTTON1_MASK);
+                nowY = 50;
+//                clickButton(nowX, nowY, KeyEvent.BUTTON1_MASK);
 
                 Thread.sleep(200);
-                nowY = 105;
                 clickButton(nowX, nowY, KeyEvent.BUTTON3_MASK);
 
-                Thread.sleep(500);
-                nowY += 50;
+                Thread.sleep(300);
+                nowY = 230;
                 clickButton(nowX, nowY, KeyEvent.BUTTON1_MASK);
 
-                Thread.sleep(500);
-                robot.keyPress(KeyEvent.VK_WINDOWS);
-                robot.keyPress(KeyEvent.VK_LEFT);
-                robot.keyRelease(KeyEvent.VK_LEFT);
-                robot.keyRelease(KeyEvent.VK_WINDOWS);
-                robot.keyPress(KeyEvent.VK_ESCAPE);
-                robot.keyRelease(KeyEvent.VK_ESCAPE);
+//                Thread.sleep(500);
+//                robot.keyPress(KeyEvent.VK_WINDOWS);
+//                robot.keyPress(KeyEvent.VK_LEFT);
+//                robot.keyRelease(KeyEvent.VK_LEFT);
+//                robot.keyRelease(KeyEvent.VK_WINDOWS);
+//                robot.keyPress(KeyEvent.VK_ESCAPE);
+//                robot.keyRelease(KeyEvent.VK_ESCAPE);
 
-                Thread.sleep(500);
-                nowY = 40;
-                nowX = 135;
-                clickButton(nowX, nowY, KeyEvent.BUTTON1_MASK);
+//                Thread.sleep(500);
+//                nowY = 40;
+//                nowX = 135;
+//                clickButton(nowX, nowY, KeyEvent.BUTTON1_MASK);
 
             } catch (AWTException | InterruptedException awtException) {
                 awtException.printStackTrace();

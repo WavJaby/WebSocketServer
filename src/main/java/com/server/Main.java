@@ -19,7 +19,7 @@ public class Main implements RequestHandler.ClientEvent {
     public static void main(String[] args) {
 //        new Thread(() -> new Window(clients)).start();
         new Window(clients);
-//        new Thread(() -> new AutoReload()).start();
+        new Thread(() -> new AutoReload()).start();
 
         initServer();
     }
